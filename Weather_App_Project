@@ -1,0 +1,35 @@
+from tkinter import *
+from config import API_KEY
+
+def get_weather_data(location):
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&appid={API_KEY}&units=metric"
+    response = requests.get(url)
+    data = response.json()
+    return data
+
+def display_weather():
+    location = entry.get()
+    weather_data = get_weather_data(location)
+    weather_description = weather_data["weather"][0]["description"]
+    temperature = weather_data["main"]["temp"]
+    humidity = weather_data["main"]["humidity"]
+
+    label_result.config(text=f"Weather: {weather_description}\nTemperature: {temperature}°C\nHumidity: {humidity}%")
+
+root = Tk()
+root.title("Weather App")
+root.geometry("300x200")
+
+label_title = Label(root, text="Enter location:", font=("Arial", 14))
+label_title.pack()
+
+entry = Entry(root, font=("Arial", 12))
+entry.pack()
+
+button = Button(root, text="Get Weather", command=display_weather)
+button.pack()
+
+label_result = Label(root, text="", font=("Arial", 12))
+label_result.pack()
+
+root.mainloop()
